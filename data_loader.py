@@ -1,6 +1,4 @@
 import numpy as np
-import pandas as pd
-
 import struct
 
 def read_idx_images(file_path="mnist"):
