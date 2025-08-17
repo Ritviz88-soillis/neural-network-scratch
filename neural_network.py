@@ -5,9 +5,9 @@ def init_param(layer_dims):
 
     np.random.seed(42)  # For reproducibility
 
-    w1 = np.random.randn(layer_dims[1], layer_dims[0]) * 0.01
+    w1 = np.random.randn(layer_dims[1], layer_dims[0]) * np.sqrt(2.0 / layer_dims[0])
     b1 = np.zeros((layer_dims[1], 1))
-    w2 = np.random.randn(layer_dims[2], layer_dims[1]) * 0.01
+    w2 = np.random.randn(layer_dims[2], layer_dims[1]) * np.sqrt(2.0 / layer_dims[1])
     b2 = np.zeros((layer_dims[2], 1))
 
     return w1, b1, w2, b2
@@ -41,7 +41,7 @@ def backward_propagation(X, Y, w1, b1, w2, b2, z1, a1, z2, a2):
     db2 = np.sum(dz2, axis=1, keepdims=True) / m
 
     da1 = np.dot(w2.T, dz2)
-    dz1 = da1 * (z1 > 0)  # ReLU derivative
+    dz1 = da1 * (z1 > 0)
     dw1 = np.dot(dz1, X.T) / m
     db1 = np.sum(dz1, axis=1, keepdims=True) / m
 
@@ -94,8 +94,8 @@ def gradient_descent(X_train, Y_train, X_test, Y_test, iterations, learning_rate
 
 
         dw1, db1, dw2, db2 = backward_propagation(X_train, Y_train, w1, b1, w2, b2, z1, a1, z2, a2)
-
-        w1, b1, w2, b2 = update_params(w1, b1, w2, b2, dw1, db1, dw2, db2, learning_rate)
+        current_lr = learning_rate * (0.95 ** (i // 200))
+        w1, b1, w2, b2 = update_params(w1, b1, w2, b2, dw1, db1, dw2, db2, current_lr)
 
         # Print progress
         if i % 10 == 0:
